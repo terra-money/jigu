@@ -1,0 +1,713 @@
+{
+    "total_count": "5",
+    "count": "5",
+    "page_number": "1",
+    "page_total": "1",
+    "limit": "100",
+    "txs": [{
+            "height": "195",
+            "txhash": "57B9E6F196FD827F2EBDD3788DD46A4C35C0BE555D3742CBDA29A67877D0A1C5",
+            "data": "0101",
+
+            "logs": [{
+                "msg_index": 0,
+                "success": true,
+                "log": "",
+                "events": [{
+                        "type": "message",
+                        "attributes": [{
+                                "key": "sender",
+                                "value": "terra1jyjg55hzsh0f4xymy0kuuan30pp4q75ru0h35c"
+                            },
+                            {
+                                "key": "module",
+                                "value": "governance"
+                            },
+                            {
+                                "key": "sender",
+                                "value": "terra1jyjg55hzsh0f4xymy0kuuan30pp4q75ru0h35c"
+                            },
+                            {
+                                "key": "action",
+                                "value": "submit_proposal"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "proposal_deposit",
+                        "attributes": [{
+                                "key": "amount",
+                                "value": "1uluna"
+                            },
+                            {
+                                "key": "proposal_id",
+                                "value": "1"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "submit_proposal",
+                        "attributes": [{
+                            "key": "proposal_id",
+                            "value": "1"
+                        }]
+                    },
+                    {
+                        "type": "transfer",
+                        "attributes": [{
+                                "key": "recipient",
+                                "value": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+                            },
+                            {
+                                "key": "amount",
+                                "value": "1uluna"
+                            }
+                        ]
+                    }
+                ]
+            }],
+            "gas_wanted": "73200",
+            "gas_used": "56278",
+            "tx": {
+                "type": "core/StdTx",
+                "value": {
+                    "msg": [{
+                        "type": "gov/MsgSubmitProposal",
+                        "value": {
+                            "content": {
+                                "type": "gov/TextProposal",
+                                "value": {
+                                    "title": "Test proposal",
+                                    "description": "Kytzu testing the iOS wallet, do not deposit to this porposal"
+                                }
+                            },
+                            "initial_deposit": [{
+                                "denom": "uluna",
+                                "amount": "1"
+                            }],
+                            "proposer": "terra1jyjg55hzsh0f4xymy0kuuan30pp4q75ru0h35c"
+                        }
+                    }],
+                    "fee": {
+                        "amount": [{
+                            "denom": "uluna",
+                            "amount": "0"
+                        }],
+                        "gas": "73200"
+                    },
+                    "signatures": [{
+                        "pub_key": {
+                            "type": "tendermint/PubKeySecp256k1",
+                            "value": "An/QGB4F5r/sCIEbVaYO1SuY/NHfWdyW5fhQmKNAEgGA"
+                        },
+                        "signature": "D/0Ds6cLfk7kpzqx5tOLbQLgz02aTSnQxHhCtA2JYalYYM5W1JaI9gCEqCd3D9ags6v9lZVDmcR+vxF47Mk66w=="
+                    }],
+                    "memo": "Syncnode's iOS Wallet"
+                }
+            },
+            "timestamp": "2019-12-13T17:19:21Z",
+            "events": [{
+                    "type": "message",
+                    "attributes": [{
+                            "key": "sender",
+                            "value": "terra1jyjg55hzsh0f4xymy0kuuan30pp4q75ru0h35c"
+                        },
+                        {
+                            "key": "module",
+                            "value": "governance"
+                        },
+                        {
+                            "key": "sender",
+                            "value": "terra1jyjg55hzsh0f4xymy0kuuan30pp4q75ru0h35c"
+                        },
+                        {
+                            "key": "action",
+                            "value": "submit_proposal"
+                        }
+                    ]
+                },
+                {
+                    "type": "proposal_deposit",
+                    "attributes": [{
+                            "key": "amount",
+                            "value": "1uluna"
+                        },
+                        {
+                            "key": "proposal_id",
+                            "value": "1"
+                        }
+                    ]
+                },
+                {
+                    "type": "submit_proposal",
+                    "attributes": [{
+                        "key": "proposal_id",
+                        "value": "1"
+                    }]
+                },
+                {
+                    "type": "transfer",
+                    "attributes": [{
+                            "key": "recipient",
+                            "value": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+                        },
+                        {
+                            "key": "amount",
+                            "value": "1uluna"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "height": "331052",
+            "txhash": "A4CFC7C65B368143E5B02861D256BA111EF98AB291792BADD41FABE04A6EFCDA",
+            "data": "0102",
+
+            "logs": [{
+                "msg_index": 0,
+                "success": true,
+                "log": "",
+                "events": [{
+                        "type": "message",
+                        "attributes": [{
+                                "key": "sender",
+                                "value": "terra1wm25ux06a8l5dtkkvwm0f4u2tpryg8zqr6h82l"
+                            },
+                            {
+                                "key": "module",
+                                "value": "governance"
+                            },
+                            {
+                                "key": "sender",
+                                "value": "terra1wm25ux06a8l5dtkkvwm0f4u2tpryg8zqr6h82l"
+                            },
+                            {
+                                "key": "action",
+                                "value": "submit_proposal"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "proposal_deposit",
+                        "attributes": [{
+                                "key": "amount",
+                                "value": "10uluna"
+                            },
+                            {
+                                "key": "proposal_id",
+                                "value": "2"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "submit_proposal",
+                        "attributes": [{
+                            "key": "proposal_id",
+                            "value": "2"
+                        }]
+                    },
+                    {
+                        "type": "transfer",
+                        "attributes": [{
+                                "key": "recipient",
+                                "value": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+                            },
+                            {
+                                "key": "amount",
+                                "value": "10uluna"
+                            }
+                        ]
+                    }
+                ]
+            }],
+            "gas_wanted": "231533",
+            "gas_used": "153818",
+            "tx": {
+                "type": "core/StdTx",
+                "value": {
+                    "msg": [{
+                        "type": "gov/MsgSubmitProposal",
+                        "value": {
+                            "content": {
+                                "type": "gov/TextProposal",
+                                "value": {
+                                    "title": "Unlocking the pre-seed, seed round's Luna Tokens at once.",
+                                    "description": "There are countless questions about \"until when the great many of the pre-seed and seed round's Luna Tokens will be released?\" from small investors in korea and this becomes the FUD about price drop (caused by the dumping of the pre-seed and seed round investors, which will not happen) continues to spread over the time, causing existing cryptocurrency traders to continue to be reluctant to enter.\nIf all pre-seed and seed round's Luna tokens are released at once and show there is no drop in price and the staking of Luna Tokens by pre-seed, seed investors continues, as has been the case with the ATOM, small holders and small traders are expected to continue to believe in the Terra Project and continue to stake, hold their Luna Tokens and even want to buy more, which would lead proper value of Luna Tokens.\n\nOr if many of investors really just want to sell their tokens, not interested in what Terra has done, it would be better to allow them to sell early and let them go away from Terra Project, and give chances to small investors to buy Luna cheaper, not with concern about dumping but with a fresh start."
+                                }
+                            },
+                            "initial_deposit": [{
+                                "denom": "uluna",
+                                "amount": "10"
+                            }],
+                            "proposer": "terra1wm25ux06a8l5dtkkvwm0f4u2tpryg8zqr6h82l"
+                        }
+                    }],
+                    "fee": {
+                        "amount": [{
+                            "denom": "ukrw",
+                            "amount": "3473"
+                        }],
+                        "gas": "231533"
+                    },
+                    "signatures": [{
+                        "pub_key": {
+                            "type": "tendermint/PubKeySecp256k1",
+                            "value": "AgfYBjlvfQtwveh1VkpLc2Es0sw/KqkYo56g7EGGzQcB"
+                        },
+                        "signature": "REOwtamjIatffcCwyDsAcQTtB7FtNhk/7F0enBK7Ivk45SML13uKH2I2qa7CmxO1Hnz7Rj+lELQ5NSX/Ghd0YQ=="
+                    }],
+                    "memo": ""
+                }
+            },
+            "timestamp": "2020-01-07T17:50:30Z",
+            "events": [{
+                    "type": "message",
+                    "attributes": [{
+                            "key": "sender",
+                            "value": "terra1wm25ux06a8l5dtkkvwm0f4u2tpryg8zqr6h82l"
+                        },
+                        {
+                            "key": "module",
+                            "value": "governance"
+                        },
+                        {
+                            "key": "sender",
+                            "value": "terra1wm25ux06a8l5dtkkvwm0f4u2tpryg8zqr6h82l"
+                        },
+                        {
+                            "key": "action",
+                            "value": "submit_proposal"
+                        }
+                    ]
+                },
+                {
+                    "type": "proposal_deposit",
+                    "attributes": [{
+                            "key": "amount",
+                            "value": "10uluna"
+                        },
+                        {
+                            "key": "proposal_id",
+                            "value": "2"
+                        }
+                    ]
+                },
+                {
+                    "type": "submit_proposal",
+                    "attributes": [{
+                        "key": "proposal_id",
+                        "value": "2"
+                    }]
+                },
+                {
+                    "type": "transfer",
+                    "attributes": [{
+                            "key": "recipient",
+                            "value": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+                        },
+                        {
+                            "key": "amount",
+                            "value": "10uluna"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "height": "376670",
+            "txhash": "DBF68699DCC2F7575F3EB3BEA5B6C0B2CCAE571D35055AA80A2E480E64A4E802",
+            "data": "0103",
+
+            "logs": [{
+                "msg_index": 0,
+                "success": true,
+                "log": "",
+                "events": [{
+                        "type": "message",
+                        "attributes": [{
+                                "key": "sender",
+                                "value": "terra1nywja8qykzgcva579tyuarglyv9dc75y8cyw3f"
+                            },
+                            {
+                                "key": "module",
+                                "value": "governance"
+                            },
+                            {
+                                "key": "sender",
+                                "value": "terra1nywja8qykzgcva579tyuarglyv9dc75y8cyw3f"
+                            },
+                            {
+                                "key": "action",
+                                "value": "submit_proposal"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "proposal_deposit",
+                        "attributes": [{
+                                "key": "amount",
+                                "value": "500000000uluna"
+                            },
+                            {
+                                "key": "proposal_id",
+                                "value": "3"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "submit_proposal",
+                        "attributes": [{
+                            "key": "proposal_id",
+                            "value": "3"
+                        }]
+                    },
+                    {
+                        "type": "transfer",
+                        "attributes": [{
+                                "key": "recipient",
+                                "value": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+                            },
+                            {
+                                "key": "amount",
+                                "value": "500000000uluna"
+                            }
+                        ]
+                    }
+                ]
+            }],
+            "gas_wanted": "182000",
+            "gas_used": "120647",
+            "tx": {
+                "type": "core/StdTx",
+                "value": {
+                    "msg": [{
+                        "type": "gov/MsgSubmitProposal",
+                        "value": {
+                            "content": {
+                                "type": "gov/TextProposal",
+                                "value": {
+                                    "title": "Explicit disclosure of the circulating supply of LUNA",
+                                    "description": "  The circulating supply of LUNA has always been a mystery in the Terra community. Coinmarketcap and Coingecko did their own calculation, but the figure differed from 189million to 287 million. And people from the community said the actual circulating supply was around 70million. \n  An official report of the circulating supply can increase the transparency of information disclosure. In additon, the exaggerated market cap could be a major reason that prevented people from investing LUNA. If the actualy circulating supply is different from those released by coinmarketcap and coingecko, I hope the team can talk to these two platforms and modify this mistake."
+                                }
+                            },
+                            "initial_deposit": [{
+                                "denom": "uluna",
+                                "amount": "500000000"
+                            }],
+                            "proposer": "terra1nywja8qykzgcva579tyuarglyv9dc75y8cyw3f"
+                        }
+                    }],
+                    "fee": {
+                        "amount": [{
+                            "denom": "uluna",
+                            "amount": "2730"
+                        }],
+                        "gas": "182000"
+                    },
+                    "signatures": [{
+                        "pub_key": {
+                            "type": "tendermint/PubKeySecp256k1",
+                            "value": "Al4E+xICUrTA/YTMCqGne8BFmpreF+Xh9YsLV8y19ejC"
+                        },
+                        "signature": "e6c48GBYwdYkHkMdLOF7zGqq7ri//kE4cmyA6POm6UBzmMwpX1/HUDLhzpu8mz7ItiOjj8291f513GdXSL1CPQ=="
+                    }],
+                    "memo": ""
+                }
+            },
+            "timestamp": "2020-01-11T05:08:03Z",
+            "events": [{
+                    "type": "message",
+                    "attributes": [{
+                            "key": "sender",
+                            "value": "terra1nywja8qykzgcva579tyuarglyv9dc75y8cyw3f"
+                        },
+                        {
+                            "key": "module",
+                            "value": "governance"
+                        },
+                        {
+                            "key": "sender",
+                            "value": "terra1nywja8qykzgcva579tyuarglyv9dc75y8cyw3f"
+                        },
+                        {
+                            "key": "action",
+                            "value": "submit_proposal"
+                        }
+                    ]
+                },
+                {
+                    "type": "proposal_deposit",
+                    "attributes": [{
+                            "key": "amount",
+                            "value": "500000000uluna"
+                        },
+                        {
+                            "key": "proposal_id",
+                            "value": "3"
+                        }
+                    ]
+                },
+                {
+                    "type": "submit_proposal",
+                    "attributes": [{
+                        "key": "proposal_id",
+                        "value": "3"
+                    }]
+                },
+                {
+                    "type": "transfer",
+                    "attributes": [{
+                            "key": "recipient",
+                            "value": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+                        },
+                        {
+                            "key": "amount",
+                            "value": "500000000uluna"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "height": "522678",
+            "txhash": "5BA4A288382F2CAF3EB212DB48CB0432DB6E6592F6EEBD7A7AF5805AB90EDC1B",
+            "code": 6,
+
+            "logs": [{
+                "msg_index": 0,
+                "success": false,
+                "log": "{\"codespace\":\"gov\",\"code\":6,\"message\":\"invalid proposal content: {\\\"codespace\\\":\\\"params\\\",\\\"code\\\":2,\\\"message\\\":\\\"error setting parameter 18 on windowprobation (): invalid character -- Amino:JSON int/int64/uint/uint64 expects quoted values for javascript numeric support, got: 18.\\\"}\"}",
+                "events": [{
+                    "type": "message",
+                    "attributes": [{
+                        "key": "action",
+                        "value": "submit_proposal"
+                    }]
+                }]
+            }],
+            "gas_wanted": "150000",
+            "gas_used": "30850",
+            "tx": {
+                "type": "core/StdTx",
+                "value": {
+                    "msg": [{
+                        "type": "gov/MsgSubmitProposal",
+                        "value": {
+                            "content": {
+                                "type": "params/ParameterChangeProposal",
+                                "value": {
+                                    "title": "Proposal to Implement a Temporary Tax Rate Freeze",
+                                    "description": "Propose a temporary freeze in the tax rate until sufficient reward history has been established.\n\n-=-=-\n\nFull proposal: https://agora.terra.money/t/proposal-to-implement-a-temporary-tax-rate-freeze/172\n\n-=-=-\n\n",
+                                    "changes": [{
+                                        "subspace": "treasury",
+                                        "key": "windowprobation",
+                                        "value": "18"
+                                    }]
+                                }
+                            },
+                            "initial_deposit": [{
+                                "denom": "uluna",
+                                "amount": "512000000"
+                            }],
+                            "proposer": "terra1uw4244x4ull660gyuft3hzv4mrkw0a50umkx90"
+                        }
+                    }],
+                    "fee": {
+                        "amount": [{
+                            "denom": "ukrw",
+                            "amount": "2250"
+                        }],
+                        "gas": "150000"
+                    },
+                    "signatures": [{
+                        "pub_key": {
+                            "type": "tendermint/PubKeySecp256k1",
+                            "value": "AkzjKhsBYzfTjSS0St8hXxeS3lfU84uEVzTccgYvIDVi"
+                        },
+                        "signature": "SLzvjGvLtlpnCDuAhY5ZONQDSiHZEilGQtdnsaYpOW1s06Y0EOkVJiD0Rkpio6Sc6Ee5HRvMwYTLHikFL8yBIQ=="
+                    }],
+                    "memo": ""
+                }
+            },
+            "timestamp": "2020-01-22T08:14:45Z",
+            "events": [{
+                "type": "message",
+                "attributes": [{
+                    "key": "action",
+                    "value": "submit_proposal"
+                }]
+            }]
+        },
+        {
+            "height": "522686",
+            "txhash": "80FDE2548003C946C130BEDEE1DBD001EC5353A7BEEED273F20D5EFA0A3DC251",
+            "data": "0104",
+
+            "logs": [{
+                "msg_index": 0,
+                "success": true,
+                "log": "",
+                "events": [{
+                        "type": "message",
+                        "attributes": [{
+                                "key": "sender",
+                                "value": "terra1uw4244x4ull660gyuft3hzv4mrkw0a50umkx90"
+                            },
+                            {
+                                "key": "module",
+                                "value": "governance"
+                            },
+                            {
+                                "key": "sender",
+                                "value": "terra1uw4244x4ull660gyuft3hzv4mrkw0a50umkx90"
+                            },
+                            {
+                                "key": "action",
+                                "value": "submit_proposal"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "proposal_deposit",
+                        "attributes": [{
+                                "key": "amount",
+                                "value": "512000000uluna"
+                            },
+                            {
+                                "key": "proposal_id",
+                                "value": "4"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "submit_proposal",
+                        "attributes": [{
+                                "key": "proposal_id",
+                                "value": "4"
+                            },
+                            {
+                                "key": "voting_period_start",
+                                "value": "4"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "transfer",
+                        "attributes": [{
+                                "key": "recipient",
+                                "value": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+                            },
+                            {
+                                "key": "amount",
+                                "value": "512000000uluna"
+                            }
+                        ]
+                    }
+                ]
+            }],
+            "gas_wanted": "150000",
+            "gas_used": "113031",
+            "tx": {
+                "type": "core/StdTx",
+                "value": {
+                    "msg": [{
+                        "type": "gov/MsgSubmitProposal",
+                        "value": {
+                            "content": {
+                                "type": "params/ParameterChangeProposal",
+                                "value": {
+                                    "title": "Proposal to Implement a Temporary Tax Rate Freeze",
+                                    "description": "Propose a temporary freeze in the tax rate until sufficient reward history has been established.\n\n-=-=-\n\nFull proposal: https://agora.terra.money/t/proposal-to-implement-a-temporary-tax-rate-freeze/172\n\n-=-=-\n\n",
+                                    "changes": [{
+                                        "subspace": "treasury",
+                                        "key": "windowprobation",
+                                        "value": "\"18\""
+                                    }]
+                                }
+                            },
+                            "initial_deposit": [{
+                                "denom": "uluna",
+                                "amount": "512000000"
+                            }],
+                            "proposer": "terra1uw4244x4ull660gyuft3hzv4mrkw0a50umkx90"
+                        }
+                    }],
+                    "fee": {
+                        "amount": [{
+                            "denom": "ukrw",
+                            "amount": "2250"
+                        }],
+                        "gas": "150000"
+                    },
+                    "signatures": [{
+                        "pub_key": {
+                            "type": "tendermint/PubKeySecp256k1",
+                            "value": "AkzjKhsBYzfTjSS0St8hXxeS3lfU84uEVzTccgYvIDVi"
+                        },
+                        "signature": "ip/C5JbSozzdbtd6PbXhOar94+qry4vMs/LUyg73M/Vrq5gKSratznwxMtK2zTH1nCHKiViViCbVsPXLID9jmg=="
+                    }],
+                    "memo": ""
+                }
+            },
+            "timestamp": "2020-01-22T08:15:38Z",
+            "events": [{
+                    "type": "message",
+                    "attributes": [{
+                            "key": "sender",
+                            "value": "terra1uw4244x4ull660gyuft3hzv4mrkw0a50umkx90"
+                        },
+                        {
+                            "key": "module",
+                            "value": "governance"
+                        },
+                        {
+                            "key": "sender",
+                            "value": "terra1uw4244x4ull660gyuft3hzv4mrkw0a50umkx90"
+                        },
+                        {
+                            "key": "action",
+                            "value": "submit_proposal"
+                        }
+                    ]
+                },
+                {
+                    "type": "proposal_deposit",
+                    "attributes": [{
+                            "key": "amount",
+                            "value": "512000000uluna"
+                        },
+                        {
+                            "key": "proposal_id",
+                            "value": "4"
+                        }
+                    ]
+                },
+                {
+                    "type": "submit_proposal",
+                    "attributes": [{
+                            "key": "proposal_id",
+                            "value": "4"
+                        },
+                        {
+                            "key": "voting_period_start",
+                            "value": "4"
+                        }
+                    ]
+                },
+                {
+                    "type": "transfer",
+                    "attributes": [{
+                            "key": "recipient",
+                            "value": "terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n"
+                        },
+                        {
+                            "key": "amount",
+                            "value": "512000000uluna"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
