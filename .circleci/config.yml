@@ -20,9 +20,3 @@ jobs:
       - run:
           command: pytest
           name: Test
-
-workflows:
-  main:
-    jobs:
-      - build
-      - test
