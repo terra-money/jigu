@@ -1,10 +1,34 @@
-# Jigu - The Python SDK for Terra
+<p>&nbsp;</p>
+<p align="center">
+<a href="https://jigu.terra.money/">
+<img src="https://jigu.terra.money/img/logo.svg"/>
+</a>
+</p>
 
-Jigu (지구, or **Earth** in Korean) is the official Python SDK (Software Development Kit) for Terra, which allows developers to write software that integrates with the Terra blockchain and its ecosystem. You can find the official documentation at our SDK [docs site](https://jigu.terra.money).
+<h1 align="center">Jigu (지구)</h1>
+<p align="center">
+The Python SDK for Terra.</p>
 
-## Getting Started
+<div align="center">
+  <h3>
+    <a href="https://jigu.terra.money/docs">
+      Docs
+    </a>
+    <span> | </span>
+    <a href="https://jigu.terra.money/examples">
+      Examples
+    </a>
+    <!--<a href="https://jigu.terra.money/devguide">
+      Dev Guide
+    </a>-->
+    <span> | </span>
+    <a href="https://github.com/terra-project/jigu/blob/master/CONTRIBUTING.md">
+      Contributing
+    </a>
+  </h3>
+</div>
 
-#### Install Jigu
+## Installation
 
 Jigu requires **Python 3.7+**. Install the latest version of Jigu with `pip` on PyPI:
 
@@ -12,7 +36,40 @@ Jigu requires **Python 3.7+**. Install the latest version of Jigu with `pip` on 
 $ pip install -U jigu
 ```
 
-#### Connect to Soju testnet
+## Pretty Printing
+
+Many objects in Jigu are pretty-printable by their `._pp` property.
+
+<pre>
+        <div align="left">
+        Python 3.7.6 (default, Dec 30 2019, 19:38:26)
+        >>> <strong>from jigu import Terra</strong>
+        >>> terra = Terra("columbus-3", "https://lcd.terra.dev/")
+        >>> terra.market.params()._pp
+        ╒═════════════════════════╤═════════════════╕
+        │ pool_recovery_period    │ 14400           │
+        ├─────────────────────────┼─────────────────┤
+        │ base_pool               │ 250000000000    │
+        ├─────────────────────────┼─────────────────┤
+        │ min_spread              │ 0.02            │
+        ├─────────────────────────┼─────────────────┤
+        │ tobin_tax               │ 0.0025          │
+        ├─────────────────────────┼─────────────────┤
+        │ illiquid_tobin_tax_list │ ╒══════╤══════╕ │
+        │                         │ │ umnt │ 0.02 │ │
+        │                         │ ╘══════╧══════╛ │
+        ╘═════════════════════════╧═════════════════╛
+        </div>
+</pre>
+
+works by default in Jupyter ...
+
+![jupyter](./img/jupyter.png)
+
+
+## My First Transaction
+
+### Connect to Soju testnet
 
 Once you've installed Jigu, fire up an interactive Python shell and connect to the Soju testnet using the official Soju node provided by Terraform Labs.
 
@@ -38,9 +95,11 @@ wallet.address
 
 #### Top off with testnet funds
 
-Great, now that we have an address, let's get some testnet funds. Head over to the [Soju Faucet](https://soju-faucet.terra.money/) and top off some Luna.
+Great, now that we have an address, let's get some testnet funds. Head over to the [Soju Faucet](https://faucet.terra.money/) and top off some Luna.
 
-![faucet](./img/faucet.png#shadow)
+<p align="center">
+<img src="https://jigu.terra.money/img/faucet.png" aligned="center" width="650"/>
+</p>
 
 After that's done, you should have 10,000 LUNA in your account. To confirm this, you can enter the following:
 
@@ -58,17 +117,17 @@ Let's send 23 Testnet Luna to your friend at the following address:
 We'll need to create a transaction containing a `MsgSend` alongside a short memo (note) "Hello Jigu!" -- our version of Hello World.
 
 ```python
-from jigu.core import Coin
+from jigu.core import Coins
 from jigu.core.msg import MsgSend
 
 send = MsgSend(
     from_address=wallet.address,
     to_address="terra1wg2mlrxdmnnkkykgqg4znky86nyrtc45q336yv",
-    amount=[Coin("uluna", 23_000_000)]
+    amount=Coins(uluna=23_000_000)
 )
 
 tx = wallet.create_and_sign_tx(send, memo="Hello Jigu!")
-res = soju.broadcast_tx(tx)
+res = wallet.broadcast(tx)
 ```
 
 #### See it on the blockchain
@@ -82,64 +141,26 @@ print(f"TX Hash: {res.txhash}")
 
 Copy the TX hash and enter it on [Finder](https://finder.terra.money/), selecting the chain `soju-0013`.
 
-![txhash](./img/txhash.png#shadow)
+<p align="center">
+<img src="https://jigu.terra.money/img/txhash.png" aligned="center" width="650"/>
+</p>
 
-### A Taste of DeFi
+## Learn more
 
-Now that we've gotten our bearings a little, let's take things a bit further and get a glimpse of DeFi (Decentralized Finance) through Terra using Jigu. In this example, we'll be using the Market module to swap stablecoins tracking fiat different fiat currencies.
-
-#### Swap our LUNA for stablecoins
-
-Let's create 1 transaction including 2 `MsgSwap` messages. Terra transactions can include more than one as long as sufficient fee is provided to be accepted. If we do not provide a fee, Jigu will automatically try to estimate a fee before broadcasting. However, the fee estimation mechanism is not always accurate, so here we'll apply a manual one to be safe.
-
-```python
-from jigu.core import StdFee
-from jigu.core.msg import MsgSwap
-
-swap1 = MsgSwap(
-    trader=wallet.address,
-    offer_coin=Coin("uluna", 1500_000_000),
-    ask_denom="uusd"
-)
-
-swap2 = MsgSwap(
-    trader=wallet.address,
-    offer_coin=Coin("uluna", 2000_000_000),
-    ask_denom="ukrw"
-)
-
-# Set our gas limit to 250,000 and pay 1 LUNA
-fee = StdFee.make(gas=250_000, uluna=1_000_000)
-tx = wallet.create_and_sign_tx([swap1, swap2], fee=fee)
-res = soju.broadcast_tx(tx)
-```
-
-#### See it on the blockchain
-
-```python
-print(f"TX Hash: {res.txhash}")
-# TX Hash: 04FD23C9A03A6A70118CC6FA6E729F0C442BF44838C7EBCFD7A1B6C4A70168B5
-```
-
-![swaptxhash](./img/swaptxhash.png#shadow)
-
-#### Check new account balance
-
-We've successfully swapped our LUNA for stablecoins!
-
-```python
-wallet.balance()
-# Coins(ukrw=513520000000, uluna=6472992326, uusd=326113463)
-```
-
-![account_balances](./img/account_balances.png#shadow)
-
-#### Conclusion
-
-Congratulations! You've successfully gotten set up and are ready to build applications that leverage the robust DeFi infrastructure provided by the Terra network. Explore the rest of Jigu SDK and discover what other awesome things you can build.
+Check out the official documentation at https://jigu.terra.money.
 
 ## License
 
-This software is licensed under the MIT license. See [LICENSE](./LICENSE.md) for full disclosure.
+This software is licensed under the MIT license. See [LICENSE](./LICENSE) for full disclosure.
 
 © 2020 Terraform Labs, PTE.
+
+<hr/>
+
+<p>&nbsp;</p>
+<p align="center">
+    <a href="https://terra.money/"><img src="http://terra.money/logos/terra_logo.svg" align="center" width=200/></a>
+</p>
+<div align="center">
+  <sub><em>Empowering the innovation of money.</em></sub>
+</div>
