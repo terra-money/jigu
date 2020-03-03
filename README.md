@@ -64,7 +64,7 @@ Many objects in Jigu are pretty-printable by their `._pp` property.
 
 works by default in Jupyter ...
 
-![jupyter](./img/jupyter.png)
+![jupyter](https://github.com/terra-project/jigu/blob/master/img/jupyter.png?raw=true)
 
 
 ## My First Transaction
