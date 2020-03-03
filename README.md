@@ -75,7 +75,6 @@ Once you've installed Jigu, fire up an interactive Python shell and connect to t
 
 ```python
 from jigu import Terra
-from jigu.key.mnemonic import MnemonicKey
 
 soju = Terra("soju-0013", "https://soju-lcd.terra.dev")
 assert soju.is_connected()
