@@ -6,7 +6,7 @@ from ecdsa import SECP256k1, SigningKey
 from ecdsa.util import sigencode_string_canonize
 from mnemonic import Mnemonic
 
-from jigu.key import Key, derive_child, derive_root
+from jigu.key import Key, derive_child, derive_root, LUNA_COIN_TYPE
 
 __all__ = ["MnemonicKey"]
 
@@ -15,11 +15,17 @@ class MnemonicKey(Key):
     """Implements Key interface with 24-word mnemonic. This implementation exposes the private
     key inside the application, and may not be suited for situations that demand high security."""
 
-    def __init__(self, mnemonic: str, account: int = 0, index: int = 0):
+    def __init__(
+        self,
+        mnemonic: str,
+        account: int = 0,
+        index: int = 0,
+        coin_type: int = LUNA_COIN_TYPE,
+    ):
         self.mnemonic = mnemonic
         seed = Mnemonic("english").to_seed(self.mnemonic)
         root = derive_root(seed)
-        child = derive_child(root, account, index)
+        child = derive_child(root, account, index, coin_type)
         self.account = account
         self.index = index
         self._private_key = child.PrivateKey()
@@ -30,11 +36,16 @@ class MnemonicKey(Key):
         return self._public_key
 
     @classmethod
-    def generate(cls, account: int = 0, index: int = 0) -> MnemonicKey:
+    def generate(
+        cls, account: int = 0, index: int = 0, coin_type: int = LUNA_COIN_TYPE
+    ) -> MnemonicKey:
         """Generate a random Mnemonic, with the private / public key pair with the BIP44 HD Path
         located at 44'/330'/<account>'/0/<index> (LUNA)."""
         return cls(
-            mnemonic=Mnemonic("english").generate(256), account=account, index=index
+            mnemonic=Mnemonic("english").generate(256),
+            account=account,
+            index=index,
+            coin_type=coin_type,
         )
 
     def sign(self, payload: bytes) -> bytes:

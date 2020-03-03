@@ -12,18 +12,22 @@ from jigu.util import get_bech
 
 BECH32_PUBKEY_DATA_PREFIX = "eb5ae98721"
 
-__all__ = ["derive_child", "derive_root", "Key"]
+__all__ = ["derive_child", "derive_root", "LUNA_COIN_TYPE", "Key"]
+
+LUNA_COIN_TYPE = 330
 
 
 def derive_root(seed: bytes) -> BIP32Key:
     return BIP32Key.fromEntropy(seed)
 
 
-def derive_child(root: BIP32Key, account: int = 0, index: int = 0):
+def derive_child(
+    root: BIP32Key, account: int = 0, index: int = 0, coin_type: int = LUNA_COIN_TYPE
+):
     # HD Path: 44'/330'/<acc>'/0/<idx>
     return (
         root.ChildKey(44 + BIP32_HARDEN)
-        .ChildKey(330 + BIP32_HARDEN)
+        .ChildKey(coin_type + BIP32_HARDEN)
         .ChildKey(account + BIP32_HARDEN)
         .ChildKey(0)
         .ChildKey(index)

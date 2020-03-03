@@ -1,5 +1,9 @@
 # Version Changelog
 
+## 0.1.1 (2020-03-04)
+
+- Option to change coin type other than LUNA for MnemonicKey
+
 ## 0.1.0 (2020-03-03)
 
 -   Hello Jigu!
