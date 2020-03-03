@@ -117,7 +117,7 @@ Let's send 23 Testnet Luna to your friend at the following address:
 We'll need to create a transaction containing a `MsgSend` alongside a short memo (note) "Hello Jigu!" -- our version of Hello World.
 
 ```python
-from jigu.core import Coins
+from jigu.core import Coins, StdFee
 from jigu.core.msg import MsgSend
 
 send = MsgSend(
@@ -126,7 +126,9 @@ send = MsgSend(
     amount=Coins(uluna=23_000_000)
 )
 
-tx = wallet.create_and_sign_tx(send, memo="Hello Jigu!")
+fee = StdFee.make(50000, uluna=1000) # include a small fee..
+
+tx = wallet.create_and_sign_tx(send, memo="Hello Jigu!", fee=fee)
 res = wallet.broadcast(tx)
 ```
 
