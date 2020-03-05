@@ -28,17 +28,32 @@ ParamChangeSchema = S.ANY(
 )
 
 # For each subspace, map JSON-param key to (ParamStore key, deserializing-fn)
-# TODO: add parameter definitions for all subspaces.
+# TODO: this could be refactored into XXXModuleParams class in core, with keys
+# as attributes, and API requests for Module Params give you an instance of
+# ModuleParams with all keys loaded with their current values. Then, to build
+# param changes, you would instantiate an empty ModuleParams class with the
+# values initialized to ModuleParams.EMPTY and then set each one.
+
 PARAM_DEFNS = {
-    "treasury": {
-        "tax_policy": ("taxpolicy", PolicyConstraints.deserialize),
-        "reward_policy": ("rewardpolicy", PolicyConstraints.deserialize),
-        "min_spread": ("minspread", Dec),
-        "seigniorage_burden_target": ("seigniorageburdentarget", Dec),
-        "mining_increment": ("miningincrement", Dec),
-        "window_short": ("windowshort", int),
-        "window_long": ("windowlong", int),
-        "window_probation": ("windowprobation", int),
+    "distribution": {
+        "community_tax": ("communitytax", Dec),
+        "base_proposer_reward": ("baseproposerreward", Dec),
+        "bonus_proposer_reward": ("bonusproposerreward", Dec),
+        "withdraw_addr_enabled": ("withdrawaddrenabled", bool),
+    },
+    "staking": {
+        "unbonding_time": ("UnbondingTime", int),
+        "max_validators": ("MaxValidators", int),
+        "max_entries": ("MaxEntries", int),
+        "bond_denom": ("BondDenom", str),
+    },
+    "slashing": {
+        "max_evidence_age": ("MaxEvidenceAge", int),  # no longer in cosmos master/
+        "signed_blocks_window": ("SignedBlocksWindow", int),
+        "min_signed_per_window": ("MinSignedPerWindow", Dec),
+        "downtime_jail_duration": ("DowntimeJailDuration", int),
+        "slash_fraction_double_sign": ("SlashFractionDoubleSign", Dec),
+        "slash_fraction_downtime": ("SlashFractionDowntime", Dec),
     },
     "oracle": {
         "vote_period": ("voteperiod", int),
@@ -50,6 +65,23 @@ PARAM_DEFNS = {
         "slash_window": ("slashwindow", int),
         "min_valid_per_window": ("minvalidperwindow", Dec),
     },
+    "market": {
+        "pool_recovery_period": ("poolrecoveryperiod", int),
+        "base_pool": ("basepool", Dec),
+        "min_spread": ("minspread", Dec),
+        "illiquid_tobin_tax_list": ("illiquidtobintaxlist", None),
+    },
+    "treasury": {
+        "tax_policy": ("taxpolicy", PolicyConstraints.deserialize),
+        "reward_policy": ("rewardpolicy", PolicyConstraints.deserialize),
+        "min_spread": ("minspread", Dec),
+        "seigniorage_burden_target": ("seigniorageburdentarget", Dec),
+        "mining_increment": ("miningincrement", Dec),
+        "window_short": ("windowshort", int),
+        "window_long": ("windowlong", int),
+        "window_probation": ("windowprobation", int),
+    },
+    # TODO: check gov
 }
 
 # create lookup table for deserialization
@@ -117,8 +149,11 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
     @staticmethod
     def _marshal_value(value):
         """Formats the value for param change. Terra node expects all the values to be
-        JSON-encoded.
+        JSON-encoded, and Amino:JSON int/int64/uint/uint64 expects quoted values for
+        JavaScript numeric support.
         """
+        if isinstance(value, int) and not isinstance(value, bool):
+            value = str(value)
         return serialize_to_json(value)
 
     @staticmethod
@@ -135,10 +170,6 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
             for key, value in v.items():
                 if isinstance(value, dict):
                     for subkey, obj_value in value.items():
-                        if isinstance(
-                            obj_value, int
-                        ):  # integers get treated as strings
-                            obj_value = str(obj_value)
                         param_changes.append(
                             {
                                 "subspace": subspace,

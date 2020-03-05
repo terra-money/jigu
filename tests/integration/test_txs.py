@@ -3,9 +3,10 @@ import pytest
 from jigu import Terra
 from jigu.key.mnemonic import MnemonicKey
 from jigu.core.msg import *
-from jigu.core import StdFee, Coin
+from jigu.core import StdFee, Coin, Dec, Coins
 from jigu.error import CodespaceError, TxCodespaceError
-from jigu.core.sdk.coin import Coins
+from jigu.core.proposal import *
+from jigu.core.treasury import PolicyConstraints
 
 
 class TestTx:
@@ -48,3 +49,75 @@ class TestTx:
             wallet.broadcast(tx2)
         err = excinfo.value
         assert err.codespace == "oracle"
+
+    def test_make_proposal(self, wallet, fee):
+        e = MsgSubmitProposal(
+            content=ParameterChangeProposal(
+                "testing params",
+                "yay!",
+                changes={
+                    "distribution": {
+                        "community_tax": Dec(0),
+                        "base_proposer_reward": 32,
+                        "bonus_proposer_reward": 22,
+                        "withdraw_addr_enabled": True,
+                    },
+                    "staking": {
+                        "unbonding_time": 33,
+                        "max_validators": 9999,
+                        "max_entries": 9999,
+                        "bond_denom": "BTC",
+                    },
+                    "slashing": {
+                        "max_evidence_age": 234234,
+                        "signed_blocks_window": 1,
+                        "min_signed_per_window": Dec(1),
+                        "downtime_jail_duration": 1,
+                        "slash_fraction_double_sign": 100,
+                        "slash_fraction_downtime": Dec(213.123),
+                    },
+                    "treasury": {
+                        "taxpolicy": PolicyConstraints(
+                            rate_min=Dec(0),
+                            rate_max=Dec(100),
+                            cap=Coin("unused", 0),
+                            change_max=Dec(3),
+                        ),
+                        "reward_policy": PolicyConstraints(
+                            rate_min=Dec(0),
+                            rate_max=Dec(1023423340),
+                            cap=Coin("unused", 0),
+                            change_max=Dec(3),
+                        ),
+                        "seigniorage_burden_target": Dec("2342.234234"),
+                        "mining_increment": Dec(23423423423.234234234234982),
+                        "window_short": 50,
+                        "window_long": 2,
+                        "window_probation": 30,
+                    },
+                    "oracle": {
+                        "vote_period": 345345,
+                        "vote_threshold": Dec("2342.234333"),
+                        "reward_band": Dec("234343"),
+                        "reward_distribution_window": 345345,
+                        "whitelist": ["abc", "bdc", "ttt"],
+                        "slash_fraction": Dec(23423.232343),
+                        "slash_window": 343311,
+                        "min_valid_per_window": Dec(2342.234234),
+                    },
+                    "market": {
+                        "pool_recovery_period": 234234234,
+                        "base_pool": 34534,
+                        "min_spread": 343434,
+                        "illiquid_tobin_tax_list": [{"denom": "item", "msg": "sdfsdf"}],
+                    },
+                },
+            ),
+            initial_deposit=Coins(uluna=10000000),
+            proposer=wallet.address,
+        )
+        print(wallet.address)
+        print(wallet.account_number, wallet.sequence)
+        tx = wallet.create_and_sign_tx(e, fee=fee)
+        res = wallet.broadcast(tx)
+
