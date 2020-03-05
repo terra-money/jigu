@@ -62,13 +62,17 @@ class Wallet(AccountQuery):
             memo=memo,
         )
 
+    def sign_tx(self, *args, **kwargs):
+        """Uses the Wallet's key to sign the transaction."""
+        return self.key.sign_tx(*args, **kwargs)
+
     def create_and_sign_tx(
         self, *msgs: StdMsg, fee: Optional[StdFee] = None, memo: str = "",
     ) -> StdTx:
         """Creates a sign message, signs it, and produces a transaction in one go.
         Outputs a ready-to-broadcast `StdTx`.
         """
-        return self.key.sign_tx(self.create_tx(*msgs, fee=fee, memo=memo))
+        return self.sign_tx(self.create_tx(*msgs, fee=fee, memo=memo))
 
     @contextmanager
     def manual(self) -> Wallet:
