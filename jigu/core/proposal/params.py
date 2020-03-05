@@ -1,23 +1,69 @@
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass, field
 
+from bidict import bidict
+
 from jigu.core.proposal import Content
-from jigu.core.sdk import Coin, Dec
+from jigu.core.sdk import Dec
+from jigu.core.treasury import PolicyConstraints
 from jigu.error import InvalidParamChange
-from jigu.util.serdes import JiguBox, JsonDeserializable, JsonSerializable
+from jigu.util.serdes import (
+    JiguBox,
+    JsonDeserializable,
+    JsonSerializable,
+    serialize_to_json,
+)
 from jigu.util.validation import Schemas as S
 
-__all__ = ["ParameterChangeProposal"]
+__all__ = ["ParamChanges", "ParameterChangeProposal"]
 
-symbol = r"[a-zA-Z_][a-zA-Z_0-9]*"
-ParamKeyPattern = re.compile(r"^(" + symbol + r")\.(" + symbol + r")$")
+symbol = re.compile(r"^[a-zA-Z_][a-zA-Z_0-9]*$")
 
-ParamChangeSchema = S.ONE(
+ParamChangeSchema = S.ANY(
     S.OBJECT(subspace=S.STRING, key=S.STRING, value=S.STRING),
     S.OBJECT(subspace=S.STRING, key=S.STRING, subkey=S.STRING, value=S.STRING),
 )
+
+# For each subspace, map JSON-param key to (ParamStore key, deserializing-fn)
+# TODO: add parameter definitions for all subspaces.
+PARAM_DEFNS = {
+    "treasury": {
+        "tax_policy": ("taxpolicy", PolicyConstraints.deserialize),
+        "reward_policy": ("rewardpolicy", PolicyConstraints.deserialize),
+        "min_spread": ("minspread", Dec),
+        "seigniorage_burden_target": ("seigniorageburdentarget", Dec),
+        "mining_increment": ("miningincrement", Dec),
+        "window_short": ("windowshort", int),
+        "window_long": ("windowlong", int),
+        "window_probation": ("windowprobation", int),
+    },
+    "oracle": {
+        "vote_period": ("voteperiod", int),
+        "vote_threshold": ("votethreshold", Dec),
+        "reward_band": ("rewardband", Dec),
+        "reward_distribution_window": ("rewarddistributionwindow", int),
+        "whitelist": ("whitelist", None),
+        "slash_fraction": ("slashfraction", Dec),
+        "slash_window": ("slashwindow", int),
+        "min_valid_per_window": ("minvalidperwindow", Dec),
+    },
+}
+
+# create lookup table for deserialization
+DES_LOOKUP_TABLE = {}
+for subspace, keys in PARAM_DEFNS.items():
+    DES_LOOKUP_TABLE[subspace] = {d[0]: d[1] for k, d in keys.items()}
+
+# DES_LOOKUP_TABLE[subspace][paramkey aka d[0]] = JSON param key
+# DES_LOOKUP_TABLE["treasury"]["windowlong"] -> "window_long"
+
+# create lookup table for serialization
+PARAMSTORE_KEY_LOOKUP_TABLE = {}
+for subspace, keys in PARAM_DEFNS.items():
+    PARAMSTORE_KEY_LOOKUP_TABLE[subspace] = bidict({k: d[0] for k, d in keys.items()})
 
 
 class ParamChanges(JsonSerializable, JsonDeserializable):
@@ -25,57 +71,106 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
     __schema__ = S.ARRAY(ParamChangeSchema)
 
     def __init__(self, changes: dict):
-        self.changes = changes
         for k, v in changes.items():
-            m = ParamKeyPattern.match(k)
+            m = symbol.match(k)
             if not m:
                 raise InvalidParamChange(
-                    f"Parameter change subspace and key could not be parsed: {k}"
+                    f"Parameter change subspace could not be parsed: {k}"
                 )
-            if isinstance(v, dict):
-                for sk, sv in v.items():
-                    sm = re.match(f"^{symbol}$", sk)
-                    if not sm:
-                        raise InvalidParamChange(
-                            f"Parameter change subkey is invalid - {k}: '{sk}'"
-                        )
+            if not isinstance(v, dict):
+                raise InvalidParamChange(
+                    f"Parameter change value should be a dict but got: '{type(v)}' for {k}"
+                )
+            for sk, sv in v.items():
+                sm = symbol.match(sk)
+                if not sm:
+                    raise InvalidParamChange(
+                        f"Parameter change key could not be parsed - {k}: '{sk}'"
+                    )
+        self.changes = JiguBox(changes)
 
     def __repr__(self) -> str:
         return f"<ParamChanges {self.changes!r}>"
 
+    def __getattr__(self, name: str) -> JiguBox:
+        return self.changes[name]
+
+    def __getitem__(self, item) -> JiguBox:
+        return self.changes[item]
+
+    @staticmethod
+    def _get_key(subspace, key, inverse=False):
+        """Each parameter has a special key in the ParamStore that might not correspond
+        to the parameter's JSON-name. We use this function to look up the ParamStore key
+        for the JSON-name, which we are familiar with.
+
+        Set `inverse` to `True` to look up from the opposite direction for deserialization.
+        """
+        try:
+            table = PARAMSTORE_KEY_LOOKUP_TABLE[subspace]
+            if inverse:
+                table = table.inverse
+            return table[key]
+        except KeyError:
+            return key
+
+    @staticmethod
+    def _marshal_value(value):
+        """Formats the value for param change. Terra node expects all the values to be
+        JSON-encoded.
+        """
+        return serialize_to_json(value)
+
+    @staticmethod
+    def _unmarshal_value(subspace, key, value):
+        """Looks up the correct type to decode the right type for the parameter change."""
+        if subspace in DES_LOOKUP_TABLE and key in DES_LOOKUP_TABLE[subspace]:
+            if DES_LOOKUP_TABLE[subspace][key] is not None:
+                return DES_LOOKUP_TABLE[subspace][key](value)
+        return value
+
     def to_data(self) -> list:
         param_changes = []
-        for k, v in self.changes.items():
-            m = ParamKeyPattern.match(k)
-            subspace = m.group(1)
-            key = m.group(2)
-            if isinstance(v, dict):
-                for sk, sv in v.items():
+        for subspace, v in self.changes.items():
+            for key, value in v.items():
+                if isinstance(value, dict):
+                    for subkey, obj_value in value.items():
+                        if isinstance(
+                            obj_value, int
+                        ):  # integers get treated as strings
+                            obj_value = str(obj_value)
+                        param_changes.append(
+                            {
+                                "subspace": subspace,
+                                "key": self._get_key(subspace, key),
+                                "subkey": subkey,
+                                "value": self._marshal_value(obj_value),
+                            }
+                        )
+                else:
                     param_changes.append(
                         {
                             "subspace": subspace,
-                            "key": key,
-                            "subkey": sk,
-                            "value": str(sv),
+                            "key": self._get_key(subspace, key),
+                            "value": self._marshal_value(value),
                         }
                     )
-            else:
-                param_changes.append(
-                    {"subspace": subspace, "key": key, "value": str(v),}
-                )
         return param_changes
 
     @classmethod
     def from_data(cls, data: list) -> ParamChanges:
-        changes = dict()
+        changes = JiguBox(default_box=True)
         for p in data:
-            key = p["subspace"] + "." + p["key"]
+            subspace = p["subspace"]
+            key = cls._get_key(
+                subspace, p["key"], inverse=True
+            )  # p["key"] is paramstore key, we are using json-name keys inside Jigu
+            value = cls._unmarshal_value(subspace, p["key"], json.loads(p["value"]))
             if "subkey" in p:
-                if key not in changes:
-                    changes[key] = dict()
-                changes[key][p["subkey"]] = p["value"]
+                subkey = p["subkey"]
+                changes[subspace][key][subkey] = value
             else:
-                changes[key] = p["value"]
+                changes[subspace][key] = value
         return cls(changes)
 
 
@@ -83,6 +178,7 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
 class ParameterChangeProposal(Content):
 
     type = "params/ParameterChangeProposal"
+    ParamChanges = ParamChanges  # alias for easy access
 
     __schema__ = S.OBJECT(
         type=S.STRING_WITH_PATTERN(r"^params/ParameterChangeProposal\Z"),
@@ -108,4 +204,3 @@ class ParameterChangeProposal(Content):
             description=data["description"],
             changes=ParamChanges.from_data(data["changes"]),
         )
-

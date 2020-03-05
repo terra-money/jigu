@@ -57,7 +57,8 @@ class TestMsgSubmitProposal:
     def test_schema_valid(self, msg_examples):
         for m in msg_examples[MsgSubmitProposal]:
             assert_serdes_consistent(MsgSubmitProposal, m)
-            assert_serdes_exact(MsgSubmitProposal, m)
+            # assert_serdes_exact(MsgSubmitProposal, m)
+            # we can't have exact because serialize_to_json doesn't preserve key order.
 
     @pytest.mark.serdes
     @pytest.mark.slow
