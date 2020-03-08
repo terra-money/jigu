@@ -66,7 +66,6 @@ works by default in Jupyter ...
 
 ![jupyter](https://github.com/terra-project/jigu/blob/master/img/jupyter.png?raw=true)
 
-
 ## My First Transaction
 
 ### Connect to Soju testnet
@@ -75,7 +74,6 @@ Once you've installed Jigu, fire up an interactive Python shell and connect to t
 
 ```python
 from jigu import Terra
-from jigu.key.mnemonic import MnemonicKey
 
 soju = Terra("soju-0013", "https://soju-lcd.terra.dev")
 assert soju.is_connected()
