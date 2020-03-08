@@ -27,7 +27,8 @@ ParamChangeSchema = S.ANY(
     S.OBJECT(subspace=S.STRING, key=S.STRING, subkey=S.STRING, value=S.STRING),
 )
 
-# For each subspace, map JSON-param key to (ParamStore key, deserializing-fn)
+# For each subspace, map JSON-param key to (ParamStore key, deserializing-fn, serialiazing-fn)
+# Serializing function
 # TODO: this could be refactored into XXXModuleParams class in core, with keys
 # as attributes, and API requests for Module Params give you an instance of
 # ModuleParams with all keys loaded with their current values. Then, to build
@@ -42,31 +43,31 @@ PARAM_DEFNS = {
         "withdraw_addr_enabled": ("withdrawaddrenabled", bool),
     },
     "staking": {
-        "unbonding_time": ("UnbondingTime", int),
-        "max_validators": ("MaxValidators", int),
-        "max_entries": ("MaxEntries", int),
+        "unbonding_time": ("UnbondingTime", int, str),
+        "max_validators": ("MaxValidators", int, int),
+        "max_entries": ("MaxEntries", int, int),
         "bond_denom": ("BondDenom", str),
     },
     "slashing": {
-        "max_evidence_age": ("MaxEvidenceAge", int),  # no longer in cosmos master/
-        "signed_blocks_window": ("SignedBlocksWindow", int),
+        "max_evidence_age": ("MaxEvidenceAge", int, str),  # no longer in cosmos master/
+        "signed_blocks_window": ("SignedBlocksWindow", int, str),
         "min_signed_per_window": ("MinSignedPerWindow", Dec),
-        "downtime_jail_duration": ("DowntimeJailDuration", int),
+        "downtime_jail_duration": ("DowntimeJailDuration", int, str),
         "slash_fraction_double_sign": ("SlashFractionDoubleSign", Dec),
         "slash_fraction_downtime": ("SlashFractionDowntime", Dec),
     },
     "oracle": {
-        "vote_period": ("voteperiod", int),
+        "vote_period": ("voteperiod", int, str),
         "vote_threshold": ("votethreshold", Dec),
         "reward_band": ("rewardband", Dec),
-        "reward_distribution_window": ("rewarddistributionwindow", int),
+        "reward_distribution_window": ("rewarddistributionwindow", int, str),
         "whitelist": ("whitelist", None),
         "slash_fraction": ("slashfraction", Dec),
-        "slash_window": ("slashwindow", int),
+        "slash_window": ("slashwindow", int, str),
         "min_valid_per_window": ("minvalidperwindow", Dec),
     },
     "market": {
-        "pool_recovery_period": ("poolrecoveryperiod", int),
+        "pool_recovery_period": ("poolrecoveryperiod", int, str),
         "base_pool": ("basepool", Dec),
         "min_spread": ("minspread", Dec),
         "illiquid_tobin_tax_list": ("illiquidtobintaxlist", None),
@@ -77,9 +78,9 @@ PARAM_DEFNS = {
         "min_spread": ("minspread", Dec),
         "seigniorage_burden_target": ("seigniorageburdentarget", Dec),
         "mining_increment": ("miningincrement", Dec),
-        "window_short": ("windowshort", int),
-        "window_long": ("windowlong", int),
-        "window_probation": ("windowprobation", int),
+        "window_short": ("windowshort", int, str),
+        "window_long": ("windowlong", int, str),
+        "window_probation": ("windowprobation", int, str),
     },
     # TODO: check gov
 }
@@ -147,13 +148,19 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
             return key
 
     @staticmethod
-    def _marshal_value(value):
+    def _marshal_value(subspace, key, value):
         """Formats the value for param change. Terra node expects all the values to be
         JSON-encoded, and Amino:JSON int/int64/uint/uint64 expects quoted values for
-        JavaScript numeric support.
+        JavaScript numeric support, and int16/uint16 need `int`.
         """
-        if isinstance(value, int) and not isinstance(value, bool):
-            value = str(value)
+        try:
+            if key not in PARAM_DEFNS[subspace]:  # if not JSON-name
+                # try paramstore name
+                key = ParamChanges._get_key(subspace, key, inverse=True)
+            if len(PARAM_DEFNS[subspace][key]) == 3:
+                value = PARAM_DEFNS[subspace][key][2](value)
+        except KeyError:
+            print(subspace, key, value)
         return serialize_to_json(value)
 
     @staticmethod
@@ -163,6 +170,10 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
             if DES_LOOKUP_TABLE[subspace][key] is not None:
                 return DES_LOOKUP_TABLE[subspace][key](value)
         return value
+
+    @property
+    def pretty_data(self):
+        return self.changes.items()
 
     def to_data(self) -> list:
         param_changes = []
@@ -175,7 +186,7 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
                                 "subspace": subspace,
                                 "key": self._get_key(subspace, key),
                                 "subkey": subkey,
-                                "value": self._marshal_value(obj_value),
+                                "value": self._marshal_value(subspace, key, obj_value),
                             }
                         )
                 else:
@@ -183,7 +194,7 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
                         {
                             "subspace": subspace,
                             "key": self._get_key(subspace, key),
-                            "value": self._marshal_value(value),
+                            "value": self._marshal_value(subspace, key, value),
                         }
                     )
         return param_changes
