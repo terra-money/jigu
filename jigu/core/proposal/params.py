@@ -28,7 +28,10 @@ ParamChangeSchema = S.ANY(
 )
 
 # For each subspace, map JSON-param key to (ParamStore key, deserializing-fn, serialiazing-fn)
-# Serializing function
+# Serializing function is necessary due to weird ways Cosmos's params module treats integers.
+
+# TODO: This file could use some work.
+
 # TODO: this could be refactored into XXXModuleParams class in core, with keys
 # as attributes, and API requests for Module Params give you an instance of
 # ModuleParams with all keys loaded with their current values. Then, to build
@@ -45,7 +48,7 @@ PARAM_DEFNS = {
     "staking": {
         "unbonding_time": ("UnbondingTime", int, str),
         "max_validators": ("MaxValidators", int, int),
-        "max_entries": ("MaxEntries", int, int),
+        "max_entries": ("KeyMaxEntries", int, int),
         "bond_denom": ("BondDenom", str),
     },
     "slashing": {
@@ -82,7 +85,7 @@ PARAM_DEFNS = {
         "window_long": ("windowlong", int, str),
         "window_probation": ("windowprobation", int, str),
     },
-    # TODO: check gov
+    # TODO: add gov subspace
 }
 
 # create lookup table for deserialization
@@ -160,7 +163,7 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
             if len(PARAM_DEFNS[subspace][key]) == 3:
                 value = PARAM_DEFNS[subspace][key][2](value)
         except KeyError:
-            print(subspace, key, value)
+            pass
         return serialize_to_json(value)
 
     @staticmethod
@@ -181,6 +184,7 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
             for key, value in v.items():
                 if isinstance(value, dict):
                     for subkey, obj_value in value.items():
+                        # TODO: Add ability to change governance parameters with "subkey".
                         param_changes.append(
                             {
                                 "subspace": subspace,
