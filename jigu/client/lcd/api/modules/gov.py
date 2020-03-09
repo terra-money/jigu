@@ -55,9 +55,12 @@ class GovApi(BaseApi):
     def params(self, key: str = None):
         """Puts all the parameters together."""
         deposit = self.deposit_params()
-        vote = self.vote_params()
+        voting = self.voting_params()
         tally = self.tally_params()
-        p = JiguBox({**deposit, **vote, **tally})
+        p = JiguBox(
+            {"deposit_params": deposit, "voting_params": voting, "tally_params": tally}
+        )
+
         return project(  # use response information of last entry, even if there is a delay
             tally, p[key] if key else p
         )
@@ -71,7 +74,7 @@ class GovApi(BaseApi):
         p["max_deposit_period"] = int(p["max_deposit_period"])
         return project(res, p[key] if key else p)
 
-    def vote_params(self, key: str = None) -> Union[ApiResponse, Dict[str, int]]:
+    def voting_params(self, key: str = None) -> Union[ApiResponse, Dict[str, int]]:
         res = self._api_get(f"/gov/parameters/voting")
         p = JiguBox(res, box_recast={"voting_period": int})
         return project(res, p[key] if key else p)

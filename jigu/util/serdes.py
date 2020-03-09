@@ -124,10 +124,10 @@ class JiguJsonEncoder(json.JSONEncoder):
     """Encoder class for `JsonSerializable`"""
 
     def default(self, o) -> Any:
-        try:
+        if hasattr(o, "to_data"):
             return o.to_data()
-        except AttributeError:
-            return None
+        else:
+            return json.JSONEncoder.default(self, o)
 
 
 K = TypeVar("K")  # key

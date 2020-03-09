@@ -66,7 +66,6 @@ works by default in Jupyter ...
 
 ![jupyter](https://github.com/terra-project/jigu/blob/master/img/jupyter.png?raw=true)
 
-
 ## My First Transaction
 
 ### Connect to Soju testnet

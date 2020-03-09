@@ -1,7 +1,7 @@
 __title__ = "jigu"
 __description__ = "Python SDK for Terra"
 __url__ = "https://jigu.terra.money/"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Terraform Labs, PTE. LTD"
 __author_email__ = "engineering@terra.money"
 __license__ = "MIT"

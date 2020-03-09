@@ -55,6 +55,10 @@ class InvalidValConsPubKey(ValidationError, ValueError):
     Consensus (Tendermint) pubkey (Bech32-encoded pubkey prefixed with terravalconspub-)."""
 
 
+class InvalidParamChange(ValidationError, ValueError):
+    """The parameter change does not adhere to specified schema."""
+
+
 class JsonSchemaValidationError(ValidationError, JsonSchemaException):
     """Failed attempt to deserialize an object using a :class:`JsonDeserializable`."""
 
