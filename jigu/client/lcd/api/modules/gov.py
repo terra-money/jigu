@@ -57,7 +57,10 @@ class GovApi(BaseApi):
         deposit = self.deposit_params()
         voting = self.voting_params()
         tally = self.tally_params()
-        p = JiguBox({**deposit, **voting, **tally})
+        p = JiguBox(
+            {"deposit_params": deposit, "voting_params": voting, "tally_params": tally}
+        )
+
         return project(  # use response information of last entry, even if there is a delay
             tally, p[key] if key else p
         )
