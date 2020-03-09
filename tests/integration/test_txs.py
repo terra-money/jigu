@@ -111,6 +111,11 @@ class TestTx:
                         "min_spread": Dec(343434),
                         "illiquid_tobin_tax_list": [{"denom": "item", "msg": "sdfsdf"}],
                     },
+                    "gov": {
+                        "deposit_params": {"min_deposit": "3000"},
+                        "vote_params": {"min_deposit": "3000"},
+                        "tallyparams": {"min_deposit": "3000"},
+                    },
                 },
             ),
             initial_deposit=Coins(uluna=10000000),

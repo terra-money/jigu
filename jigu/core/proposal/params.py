@@ -22,10 +22,7 @@ __all__ = ["ParamChanges", "ParameterChangeProposal"]
 
 symbol = re.compile(r"^[a-zA-Z_][a-zA-Z_0-9]*$")
 
-ParamChangeSchema = S.ANY(
-    S.OBJECT(subspace=S.STRING, key=S.STRING, value=S.STRING),
-    S.OBJECT(subspace=S.STRING, key=S.STRING, subkey=S.STRING, value=S.STRING),
-)
+ParamChangeSchema = S.OBJECT(subspace=S.STRING, key=S.STRING, value=S.STRING)
 
 # For each subspace, map JSON-param key to (ParamStore key, deserializing-fn, serialiazing-fn)
 # Serializing function is necessary due to weird ways Cosmos's params module treats integers.
@@ -85,7 +82,12 @@ PARAM_DEFNS = {
         "window_long": ("windowlong", int, str),
         "window_probation": ("windowprobation", int, str),
     },
-    # TODO: add gov subspace
+    "gov": {
+        "deposit_params": ("depositparams", None),
+        "voting_params": ("votingparams", None),
+        "tally_params": ("tallyparams", None),
+    }
+    # TODO: add governance subkey types?
 }
 
 # create lookup table for deserialization
@@ -182,25 +184,13 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
         param_changes = []
         for subspace, v in self.changes.items():
             for key, value in v.items():
-                if isinstance(value, dict):
-                    for subkey, obj_value in value.items():
-                        # TODO: Add ability to change governance parameters with "subkey".
-                        param_changes.append(
-                            {
-                                "subspace": subspace,
-                                "key": self._get_key(subspace, key),
-                                "subkey": subkey,
-                                "value": self._marshal_value(subspace, key, obj_value),
-                            }
-                        )
-                else:
-                    param_changes.append(
-                        {
-                            "subspace": subspace,
-                            "key": self._get_key(subspace, key),
-                            "value": self._marshal_value(subspace, key, value),
-                        }
-                    )
+                param_changes.append(
+                    {
+                        "subspace": subspace,
+                        "key": self._get_key(subspace, key),
+                        "value": self._marshal_value(subspace, key, value),
+                    }
+                )
         return param_changes
 
     @classmethod
@@ -212,11 +202,7 @@ class ParamChanges(JsonSerializable, JsonDeserializable):
                 subspace, p["key"], inverse=True
             )  # p["key"] is paramstore key, we are using json-name keys inside Jigu
             value = cls._unmarshal_value(subspace, p["key"], json.loads(p["value"]))
-            if "subkey" in p:
-                subkey = p["subkey"]
-                changes[subspace][key][subkey] = value
-            else:
-                changes[subspace][key] = value
+            changes[subspace][key] = value
         return cls(changes)
 
 
