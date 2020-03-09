@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from bidict import bidict
 
 from jigu.core.proposal import Content
-from jigu.core.sdk import Dec
+from jigu.core.sdk import Coins, Dec
 from jigu.core.treasury import PolicyConstraints
 from jigu.error import InvalidParamChange
 from jigu.util.serdes import (
@@ -28,6 +28,47 @@ ParamChangeSchema = S.OBJECT(subspace=S.STRING, key=S.STRING, value=S.STRING)
 # Serializing function is necessary due to weird ways Cosmos's params module treats integers.
 
 # TODO: This file could use some work.
+
+# Define the deserialization and serialization functions for governance params
+def deserialize_deposit(data: dict):
+    if data.get("min_deposit"):
+        data["min_deposit"] = Coins.deserialize(data["min_deposit"])
+    if data.get("max_deposit_period"):
+        data["max_deposit_period"] = int(data["max_deposit_period"])
+    return data
+
+
+def serialize_deposit(data: dict):
+    if data.get("max_deposit_period"):
+        data["max_deposit_period"] = str(int(data["max_deposit_period"]))
+    return data
+
+
+def deserialize_voting(data: dict):
+    if data.get("voting_period"):
+        data["voting_period"] = int(data["voting_period"])
+    return data
+
+
+def serialize_voting(data: dict):
+    if data.get("voting_period"):
+        data["voting_period"] = str(int(data["voting_period"]))
+    return data
+
+
+def deserialize_tally(data: dict):
+    if data.get("quorum"):
+        data["quorum"] = Dec(data["quorum"])
+    if data.get("threshold"):
+        data["threshold"] = Dec(data["threshold"])
+    if data.get("veto"):
+        data["veto"] = Dec(data["veto"])
+    return data
+
+
+def serialize_tally(data: dict):
+    return data
+
 
 # TODO: this could be refactored into XXXModuleParams class in core, with keys
 # as attributes, and API requests for Module Params give you an instance of
@@ -83,11 +124,10 @@ PARAM_DEFNS = {
         "window_probation": ("windowprobation", int, str),
     },
     "gov": {
-        "deposit_params": ("depositparams", None),
-        "voting_params": ("votingparams", None),
-        "tally_params": ("tallyparams", None),
-    }
-    # TODO: add governance subkey types?
+        "deposit_params": ("depositparams", deserialize_deposit, serialize_deposit),
+        "voting_params": ("votingparams", deserialize_voting, serialize_voting),
+        "tally_params": ("tallyparams", deserialize_tally, serialize_tally),
+    },
 }
 
 # create lookup table for deserialization

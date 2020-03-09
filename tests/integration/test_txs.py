@@ -112,9 +112,16 @@ class TestTx:
                         "illiquid_tobin_tax_list": [{"denom": "item", "msg": "sdfsdf"}],
                     },
                     "gov": {
-                        "deposit_params": {"min_deposit": "3000"},
-                        "vote_params": {"min_deposit": "3000"},
-                        "tallyparams": {"min_deposit": "3000"},
+                        "deposit_params": {
+                            "min_deposit": Coins(uluna=2, ukrw=5),
+                            "max_deposit_period": 30434,
+                        },
+                        "voting_params": {"voting_period": 434243234},
+                        "tallyparams": {
+                            "quorum": Dec(234234.2334),
+                            "threshold": Dec(23423.2323),
+                            "veto": Dec(1232.234),
+                        },
                     },
                 },
             ),
