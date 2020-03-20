@@ -27,7 +27,7 @@ class MsgInfo(wrapt.ObjectProxy):
         ),
     )
 
-    def __init__(self, msg: StdMsg, success: bool, log: str, events: EventsQuery):
+    def __init__(self, msg: StdMsg, success: bool, log: dict, events: EventsQuery):
         wrapt.ObjectProxy.__init__(self, msg)
         try:
             log = json.loads(log)
@@ -135,7 +135,10 @@ class MsgInfosQuery(PrettyPrintable):
         return iter(self.msginfos)
 
     def __contains__(self, item):
-        return item in self.types or self.actions
+        if isinstance(item, StdMsg):
+            return item.type in self.types
+        else:
+            return item in self.types or self.actions
 
     @property
     def logs(self) -> List[JiguBox]:

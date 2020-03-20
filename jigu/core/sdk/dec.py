@@ -92,7 +92,7 @@ class Dec(JsonSerializable, JsonDeserializable):
     def to_data(self) -> str:
         return str(self)
 
-    def _pretty_repr_(self, path):
+    def _pretty_repr_(self, path: str = ""):
         return self.short_str
 
     def __eq__(self, other) -> bool:
