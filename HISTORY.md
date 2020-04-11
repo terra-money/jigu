@@ -1,5 +1,13 @@
 # Version Changelog
 
+## 0.1.4 (2020-04-11)
+
+-   Fixed `SlashingAPI.signing_info_by_address` default argument function due to missing `None`-check.
+
+## 0.1.3 (2020-04-11)
+
+-   Remove debug print statement in `GovernanceAPI.proposals()`
+
 ## 0.1.2 (2020-03-20)
 
 -   Fix `Dec` pretty-printing issue on Jupyter
