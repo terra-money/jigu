@@ -3,10 +3,7 @@ from typing import Optional, Union
 from jigu.client.lcd.api import BaseApi, project
 from jigu.core import Dec, Timestamp, ValConsPubKey
 from jigu.util.serdes import JiguBox
-from jigu.util.validation import (
-    validate_val_consaddress,
-    validate_val_conspubkey
-)
+from jigu.util.validation import validate_val_consaddress, validate_val_conspubkey
 
 __all__ = ["SlashingApi"]
 
@@ -33,7 +30,8 @@ class SlashingApi(BaseApi):
         return project(res, to_signing_info(res))
 
     def signing_info_by_address(self, address: str = None):
-        validate_val_consaddress(address)
+        if address:
+            validate_val_consaddress(address)
         res = self._api_get("/slashing/signing_infos")
         infos = [to_signing_info(r) for r in res]
         by_address = JiguBox({info.address: info for info in infos})
