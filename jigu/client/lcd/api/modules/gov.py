@@ -14,7 +14,6 @@ class GovApi(BaseApi):
     def proposals(self) -> Union[ApiResponse, List[Proposal]]:
         """Get all proposals."""
         res = self._api_get("/gov/proposals")
-        print(res)
         return project(res, [Proposal.deserialize(p) for p in res])
 
     def proposal(self, proposal_id: int) -> Union[ApiResponse, Proposal]:
