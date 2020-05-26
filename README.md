@@ -9,6 +9,10 @@
 <p align="center">
 The Python SDK for Terra.</p>
 
+<br/>
+
+![diagram](./img/jigu-diagram.png)
+
 <div align="center">
   <h3>
     <a href="https://jigu.terra.money/docs">
