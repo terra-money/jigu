@@ -269,7 +269,7 @@ class TxInfo(JsonSerializable, JsonDeserializable):
                 logs.append(
                     MsgInfo(
                         msg=tx.msg[i],
-                        success=l["success"],
+                        # success=True,
                         log=l["log"],
                         events=EventsQuery(events),
                     ),

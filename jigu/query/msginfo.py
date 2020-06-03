@@ -17,7 +17,6 @@ class MsgInfo(wrapt.ObjectProxy):
 
     __schema__ = S.OBJECT(
         msg_index=S.INTEGER,
-        success=S.BOOLEAN,
         log=S.STRING,
         events=S.ARRAY(
             S.OBJECT(
@@ -27,7 +26,7 @@ class MsgInfo(wrapt.ObjectProxy):
         ),
     )
 
-    def __init__(self, msg: StdMsg, success: bool, log: dict, events: EventsQuery):
+    def __init__(self, msg: StdMsg, log: dict, events: EventsQuery):
         wrapt.ObjectProxy.__init__(self, msg)
         try:
             log = json.loads(log)
@@ -35,14 +34,9 @@ class MsgInfo(wrapt.ObjectProxy):
                 log = JiguBox(log)
         except:
             log = None
-        self._self_success = success
         self._self_log = log
         self._self_events = events
         self._self_pretty_data = None
-
-    @property
-    def success(self):
-        return self._self_success
 
     @property
     def log(self):
@@ -55,7 +49,6 @@ class MsgInfo(wrapt.ObjectProxy):
     def __eq__(self, other):
         return (
             isinstance(other, MsgInfo)
-            and self.success == other.success
             and self.log == other.log
             and self.events == other.events
         )
@@ -68,7 +61,6 @@ class MsgInfo(wrapt.ObjectProxy):
     def pretty_data(self):
         d = dict(self.__dict__)
         items = list(d.items())
-        items.append(("success", self.success))
         if self.log:
             items.append(("log", self.log))
         items.append(("events", self.events))

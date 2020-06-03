@@ -117,29 +117,10 @@ class TxApi(BaseApi):
         except RpcError as e:
             raise TxError(e.message, tx)
         if "code" in res:  # status code 200, but TxError
-            err = json.loads(res["raw_log"])
-            # There are 2 types of Codespace errors that will be caught here:
-            # 1) Message error : originating from a message
-            # 2) Transaction : stuff like out of gas, insufficient fee, etc.
-            #
-            # If message error, `err` will be a list with the following structure:
-            #
-            # {'msg_index': 0, 'success': False, 'log': '{"codespace":"market","code":2,
-            # "message":"No price registered with the oracle for asset: usdr"}', 'events':
-            # [{'type': 'message', 'attributes': [{'key': 'action', 'value': 'swap'}]}]}
-            #
-            # Otherwise, `err` will be like (example).
-            #
-            # {"codespace":"market","code":2,
-            # "message":"No price registered with the oracle for asset: usdr"}
-            if isinstance(
-                err, list
-            ):  # encountered a msg-error; find the offending msg (there will only be 1)
-                err = json.loads(err[-1]["log"])  # last one was the one responsible
             raise get_codespace_error(
-                err["codespace"],
-                err["code"],
-                err["message"],
+                res["codespace"],
+                res["code"],
+                res["raw_log"],
                 was_from_tx=True,
                 tx=tx,
                 broadcast_result=TxBroadcastResult.from_data(res, tx),

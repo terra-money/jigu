@@ -104,5 +104,5 @@ class Event(JsonSerializable, JsonDeserializable):
     def from_data(cls, data: dict) -> Event:
         attrs = defaultdict(list)
         for attr in data["attributes"]:
-            attrs[attr["key"]].append(attr["value"])
+            attrs[attr["key"]].append(attr.get("value"))
         return cls(type=data["type"], attributes=JiguBox(attrs))

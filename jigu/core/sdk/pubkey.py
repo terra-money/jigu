@@ -10,7 +10,7 @@ from jigu.util.validation import Schemas as S
 from jigu.util.validation import (
     validate_acc_pubkey,
     validate_val_conspubkey,
-    validate_val_pubkey
+    validate_val_pubkey,
 )
 
 __all__ = ["PublicKey", "AccPubKey", "ValPubKey", "ValConsPubKey"]
@@ -19,15 +19,18 @@ __all__ = ["PublicKey", "AccPubKey", "ValPubKey", "ValConsPubKey"]
 @dataclass
 class PublicKey(JsonSerializable, JsonDeserializable):
 
-    __schema__ = S.OBJECT(
-        type=S.STRING,
-        value=S.ANY(
-            S.STRING,
-            S.OBJECT(
-                threshold=S.STRING_INTEGER,
-                pubkeys=S.ARRAY(S.OBJECT(type=S.STRING, value=S.STRING)),
+    __schema__ = S.ANY(
+        S.OBJECT(
+            type=S.STRING,
+            value=S.ANY(
+                S.STRING,
+                S.OBJECT(
+                    threshold=S.STRING_INTEGER,
+                    pubkeys=S.ARRAY(S.OBJECT(type=S.STRING, value=S.STRING)),
+                ),
             ),
         ),
+        S.STRING,
     )
 
     type: str = "tendermint/PubKeySecp256k1"
@@ -39,7 +42,10 @@ class PublicKey(JsonSerializable, JsonDeserializable):
         # viz: JsonDeserializable
         if data is None:
             return None
-        return cls(type=data["type"], value=data["value"])
+        if type(data) == dict:
+            return cls(type=data["type"], value=data["value"])
+        else:
+            return cls(value=data)
 
 
 class AccPubKey(str):

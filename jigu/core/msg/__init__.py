@@ -51,6 +51,7 @@ from .oracle import (  # isort:skip
     MsgExchangeRatePrevote,
     MsgExchangeRateVote,
 )
+from .wasm import MsgStoreCode, MsgInstantiateContract, MsgExecuteContract  # isort:skip
 
 MSG_TYPES = {
     "bank/MsgSend": MsgSend,
@@ -71,4 +72,7 @@ MSG_TYPES = {
     "staking/MsgEditValidator": MsgEditValidator,
     "staking/MsgCreateValidator": MsgCreateValidator,
     "cosmos/MsgUnjail": MsgUnjail,
+    "wasm/StoreCode": MsgStoreCode,
+    "wasm/InstantiateContract": MsgInstantiateContract,
+    "wasm/ExecuteContract": MsgExecuteContract,
 }

@@ -8,6 +8,7 @@ from .slashing import SlashingApi
 from .staking import StakingApi
 from .supply import SupplyApi
 from .treasury import TreasuryApi
+from .wasm import WasmApi
 
 __all__ = [
     "AuthApi",
@@ -20,4 +21,5 @@ __all__ = [
     "StakingApi",
     "SupplyApi",
     "TreasuryApi",
+    "WasmApi",
 ]

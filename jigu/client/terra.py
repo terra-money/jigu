@@ -12,7 +12,8 @@ from jigu.client.lcd.api.modules import (
     SlashingApi,
     StakingApi,
     SupplyApi,
-    TreasuryApi
+    TreasuryApi,
+    WasmApi,
 )
 from jigu.client.lcd.api.tendermint import TendermintApi
 from jigu.client.lcd.api.tx import TxApi
@@ -22,7 +23,7 @@ from jigu.client.object_query import (
     DenomQuery,
     ProposalQuery,
     ValidatorQuery,
-    Wallet
+    Wallet,
 )
 from jigu.client.websocket import WebSocketClient
 from jigu.core import AccAddress, Coins, ValAddress
@@ -60,6 +61,7 @@ class Terra(object):
         self._market = MarketApi(self)
         self._treasury = TreasuryApi(self)
         self._gov = GovApi(self)
+        self._wasm = WasmApi(self)
 
         # LCD lower-level APIs
         self._tendermint = TendermintApi(self)
@@ -128,6 +130,10 @@ class Terra(object):
     @property
     def treasury(self):
         return self._treasury
+
+    @property
+    def wasm(self):
+        return self._wasm
 
     @property
     def gov(self):

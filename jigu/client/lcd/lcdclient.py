@@ -16,7 +16,7 @@ from .middlewares import (
     handle_codespace_errors,
     handle_general_errors,
     set_query,
-    set_timeout
+    set_timeout,
 )
 
 pv = sys.version_info
