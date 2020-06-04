@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from jigu.core import Coins, AccAddress
 from jigu.core.msg import StdMsg
-from jigu.util import hex_to_dict, dict_to_hex
+from jigu.util import b64_to_dict, dict_to_b64
 from jigu.util.validation import Schemas as S
 
 
@@ -39,7 +39,7 @@ class MsgInstantiateContract(StdMsg):
         value=S.OBJECT(
             sender=S.ACC_ADDRESS,
             code_id=S.STRING_INTEGER,
-            init_msg=S.STRING,  # hex string
+            init_msg=S.STRING,  # b64 string
             init_coins=Coins.__schema__,
         ),
     )
@@ -53,7 +53,7 @@ class MsgInstantiateContract(StdMsg):
         return {
             "sender": self.sender,
             "code_id": str(self.code_id),
-            "init_msg": dict_to_hex(self.init_msg),
+            "init_msg": dict_to_b64(self.init_msg),
             "init_coins": self.init_coins.to_data(),
         }
 
@@ -63,7 +63,7 @@ class MsgInstantiateContract(StdMsg):
         return cls(
             sender=data["sender"],
             code_id=int(data["code_id"]),
-            init_msg=hex_to_dict(data["init_msg"]),
+            init_msg=b64_to_dict(data["init_msg"]),
             init_coins=Coins.from_data(data["init_coins"]),
         )
 
@@ -79,7 +79,7 @@ class MsgExecuteContract(StdMsg):
         value=S.OBJECT(
             sender=S.ACC_ADDRESS,
             contract=S.ACC_ADDRESS,
-            msg=S.STRING,  # hex string
+            msg=S.STRING,  # b64 string
             coins=Coins.__schema__,
         ),
     )
@@ -93,7 +93,7 @@ class MsgExecuteContract(StdMsg):
         return {
             "sender": self.sender,
             "contract": self.contract,
-            "msg": dict_to_hex(self.msg),
+            "msg": dict_to_b64(self.msg),
             "coins": self.coins.to_data(),
         }
 
@@ -103,6 +103,6 @@ class MsgExecuteContract(StdMsg):
         return cls(
             sender=data["sender"],
             contract=data["contract"],
-            msg=hex_to_dict(data["msg"]),
+            msg=b64_to_dict(data["msg"]),
             coins=Coins.fromData(data["coins"]),
         )

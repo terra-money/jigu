@@ -2,6 +2,7 @@ from jigu import Terra
 from jigu.key.mnemonic import MnemonicKey
 from jigu.core import StdFee, Coins
 from jigu.core.msg import MsgStoreCode, MsgInstantiateContract, MsgExecuteContract
+from base64 import b64encode
 
 key = MnemonicKey(
     "measure bargain wheat churn wife divert vacuum west forget eager donor mad pool height feel ship sibling tower boost bright lunar mad village attitude"
@@ -14,7 +15,7 @@ wallet = terra.wallet(key)
 
 bytecode = ""
 with open("contract.wasm", "rb") as contract_file:
-    bytecode = contract_file.read().hex()
+    bytecode = b64encode(contract_file.read()).decode("utf-8")
 
 storecode = MsgStoreCode(wallet.address, bytecode)
 storetx = wallet.create_and_sign_tx(
@@ -53,8 +54,8 @@ send = MsgExecuteContract(
 
 sendtx = wallet.create_and_sign_tx(send, fee=StdFee.make(200000, uluna=100000))
 res = wallet.broadcast(sendtx)
+print(res)
 
-info = terra.wasm.contract_query(contract_address, {""})
 
 balance1 = terra.wasm.contract_query(
     contract_address, {"balance": {"address": wallet.address}}

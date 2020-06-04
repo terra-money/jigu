@@ -4,19 +4,18 @@ import base64
 import hashlib
 import uuid
 import json
-import binascii
 
 from bech32 import bech32_encode, convertbits
 
-__all__ = ["hex_to_dict", "dict_to_hex", "get_bech", "generate_salt", "hash_amino"]
+__all__ = ["b64_to_dict", "dict_to_b64", "get_bech", "generate_salt", "hash_amino"]
 
 
-def hex_to_dict(hexdata: str) -> dict:
-    return json.loads(bytes.fromhex(hexdata).decode("utf-8"))
+def b64_to_dict(b64data: str) -> dict:
+    return json.loads(base64.b64decode(b64data).decode("utf-8"))
 
 
-def dict_to_hex(data: dict) -> str:
-    return binascii.hexlify(json.dumps(data).encode("utf-8")).decode()
+def dict_to_b64(data: dict) -> str:
+    return base64.b64encode(json.dumps(data).encode("utf-8")).decode("utf-8")
 
 
 def get_bech(prefix: str, payload: str) -> str:
