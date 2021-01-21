@@ -269,8 +269,8 @@ class TxInfo(JsonSerializable, JsonDeserializable):
                 logs.append(
                     MsgInfo(
                         msg=tx.msg[i],
-                        success=l["success"],
-                        log=l["log"],
+                        success=l.get("success") or True,
+                        log=l.get("log") or [],
                         events=EventsQuery(events),
                     ),
                 )
