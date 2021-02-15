@@ -1,3 +1,7 @@
+### THIS PROJECT IS NO LONGER MAINTAINED
+
+Jigu is now retired and this repo kept only for archive purposes. Please check out the new [Terra SDK for Python](https://github.com/terra-project/terra-sdk-python).
+
 <p>&nbsp;</p>
 <p align="center">
 <a href="https://jigu.terra.money/">
